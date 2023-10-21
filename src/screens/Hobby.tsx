@@ -1,56 +1,37 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 // prettier-ignore
-import {ScrollView, View, Text, Alert, Image, TouchableOpacity, TextInput} from 'react-native';
+import {ScrollView, View, Text, Alert, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import {MD2Colors as Colors, RadioButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 // prettier-ignore
 export default function Hobby() {
-  const [nameValue, setNameValue] = useState<string>('');
-  const [checked, setChecked] = useState('man');
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState({label: '40', value: '1'});
-  const [items, setItems] = useState([
-    {label: '40', value: '1'},
-    {label: '41', value: '2'},
-    {label: '42', value: '3'},
-    {label: '43', value: '4'},
-    {label: '44', value: '5'},
-    {label: '45', value: '6'},
-    {label: '46', value: '7'},
-    {label: '47', value: '8'},
-  ]);
-  const [currentValue, setCurrentValue] = useState(1);
-  const onChange = (value: any) => {
-    switch (value) {
-      case '1':
-        setCurrentValue(1);
-        break;
-      case '2':
-        setCurrentValue(2);
-        break;
-      case '3':
-        setCurrentValue(3);
-        break;
-      case '4':
-        setCurrentValue(4);
-        break;
-      case '5':
-        setCurrentValue(5);
-        break;
-      case '6':
-        setCurrentValue(6);
-        break;
-      case '7':
-        setCurrentValue(7);
-        break;
-      case '8':
-        setCurrentValue(8);
-        break;
-      default:
-        setCurrentValue(1);
+  const [searchValue, setsearchValue] = useState<string>('');
+  const [btn, setBtn] = useState(0);
+  const [list, setList] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (btn===0) {
+      setList(['운동', '건강관리', '자전거', '등산', '골프', '댄스', '헬스', '볼링', '걷기', '명상', '요가']);
     }
-  };
+    else if(btn===1){
+      setList(['노래', '음악', '뮤지컬', '무용', '영화', '미술', '독서'])
+    }
+    else if(btn===2){
+      setList(['한식', '양식', '중식', '일식'])
+    }
+    else if(btn===3){
+      setList(['국내여행', '국외'])
+    }
+    else if(btn===4){
+      setList(['캘리그라피', '회화', '수제음식'])
+    }
+    else{
+      setList(['기타'])
+    }
+    
+  }, [btn]);
+  
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -60,226 +41,149 @@ export default function Hobby() {
           borderBottomColor: '#E7E8EE',
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'center',
         }}>
-        <Icon
-          name="arrow-left"
-          size={24}
-          color="#1F2128"
-          style={{marginLeft: 16}}
-        />
         <Text
           style={{
             color: '#1F2128',
             fontSize: 18,
             fontWeight: '600',
-            marginLeft: 120,
           }}>
-          정보 입력
+          취미 용품
         </Text>
       </View>
-      <ScrollView style={{flex: 1, paddingTop: 16}}>
+      <View
+        style={{
+          width: '100%',
+          height: 104,
+          paddingHorizontal: 16,
+          paddingTop: 32,
+          paddingBottom: 16,
+        }}>
+        <TextInput
+          style={{
+            borderRadius: 4,
+            borderWidth: 1,
+            borderColor: '#D6D7E1',
+            height: 56,
+            fontSize: 18,
+          }}
+          value={searchValue}
+          onChangeText={value => setsearchValue(value)}
+          placeholder=" 검색으로 원하는 용품 찾기"
+        />
+        <Icon
+          name="magnify"
+          size={24}
+          color={Colors.grey600}
+          style={{position: 'absolute', right: 28, bottom: 32}}
+        />
+      </View>
+      <View>
         <View
           style={{
             paddingHorizontal: 16,
-            paddingVertical: 16,
-            height: 208,
+            paddingTop: 8,
+            paddingBottom: 18,
             flexDirection: 'column',
-            justifyContent: 'space-between',
           }}>
-          <Text style={{color: '#1F2128', fontSize: 20, fontWeight: '600'}}>
-            프로필 사진
-          </Text>
           <View style={{flexDirection: 'row'}}>
-            <Image
-              source={require('../assets/profile_img.png')}
-              style={{width: 86, height: 90, borderRadius: 12}}
-            />
             <TouchableOpacity
-              style={{
-                backgroundColor: '#EEF2FB',
-                marginLeft: 10,
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: '#97B0EA',
-                marginHorizontal: 27,
-                paddingVertical: 16,
-                flexDirection: 'column',
-                width: 86,
-                height: 90,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-              onPress={() => Alert.alert('프로필 사진 추가')}>
-              <Icon name="camera" size={32} color="#97B0EA" />
-              <Text
-                style={{
-                  color: '#8A8D9E',
-                  fontSize: 16,
-                  fontWeight: '600',
-                }}>
-                1/1
-              </Text>
+              style={[styles.btn, {
+                borderColor: btn == 0 ? '#F5935C' : '#AFB2C0',
+                width: 109,
+                backgroundColor: btn == 0 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(0)}>
+              <Text style={styles.btnText}>🏌🏼 활동/건강</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btn, {
+                marginLeft: 8,
+                borderColor: btn == 1 ? '#F5935C' : '#AFB2C0',
+                width: 113,
+                backgroundColor: btn == 1 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(1)}>
+              <Text style={styles.btnText}>🎤 문화/예술</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btn, {
+                marginLeft: 8,
+                borderColor: btn == 2 ? '#F5935C' : '#AFB2C0',
+                width: 80,
+                backgroundColor: btn == 2 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(2)}>
+              <Text style={styles.btnText}>🍖 음식</Text>
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              width: 310,
-              borderRadius: 4,
-              borderWidth: 1,
-              borderColor: '#E7E8EE',
-              height: 36,
-              flexDirection: 'row',
-              paddingLeft: 8,
-              paddingVertical: 8,
-            }}>
-            <Icon
-              name="alert-circle-outline"
-              size={20}
-              color={Colors.grey500}
-            />
-            <Text style={{color: '#8A8D9E', fontSize: 16, marginLeft: 4}}>
-              얼굴이 보이는 실물사진을 첨부해주세요.
-            </Text>
+          <View style={{flexDirection: 'row', marginTop: 8}}>
+            <TouchableOpacity
+              style={[styles.btn, {
+                borderColor: btn == 3 ? '#F5935C' : '#AFB2C0',
+                width: 80,
+                backgroundColor: btn == 3 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(3)}>
+              <Text style={styles.btnText}>✈️ 여행</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btn, {
+                marginLeft: 8,
+                borderColor: btn == 4 ? '#F5935C' : '#AFB2C0',
+                width: 94,
+                backgroundColor: btn == 4 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(4)}>
+              <Text style={styles.btnText}>✏️ 클래스</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btn, {
+                marginLeft: 8,
+                borderColor: btn == 5 ? '#F5935C' : '#AFB2C0',
+                width: 112,
+                backgroundColor: btn == 5 ? '#FBCDAB12' : '#FFFFFF',
+              }]}
+              onPress={() => setBtn(5)}>
+              <Text style={styles.btnText}>🎸 기타 등등</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-            height: 126,
-            justifyContent: 'space-between',
-          }}>
-          <Text style={{color: '#1F2128', fontSize: 20, fontWeight: '600'}}>
-            이름 <Text style={{color: '#EB5757'}}>*</Text>
-          </Text>
-          <TextInput
-            style={{
-              borderRadius: 4,
-              borderWidth: 1,
-              borderColor: '#D6D7E1',
-              height: 56,
-            }}
-            value={nameValue}
-            onChangeText={value => setNameValue(value)}
-            placeholder="실명을 입력해주세요"
-          />
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-            height: 97,
-            justifyContent: 'space-between',
-          }}>
-          <Text style={{color: '#1F2128', fontSize: 20, fontWeight: '600'}}>
-            성별
-          </Text>
-          <RadioButton.Group
-            onValueChange={newValue => setChecked(newValue)}
-            value={checked}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{flexDirection: 'row'}}>
-                <RadioButton
-                  color="#F5935C"
-                  uncheckedColor="#A3A3A3"
-                  value="man"
-                />
-                <Text style={{fontSize: 18, color: '#171717', marginTop: 6}}>
-                  남성
-                </Text>
-              </View>
-              <View style={{flexDirection: 'row', marginLeft: 70}}>
-                <RadioButton
-                  color="#F5935C"
-                  uncheckedColor="#A3A3A3"
-                  value="woman"
-                />
-                <Text style={{fontSize: 18, color: '#171717', marginTop: 6}}>
-                  여성
-                </Text>
-              </View>
-            </View>
-          </RadioButton.Group>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-            height: 126,
-            justifyContent: 'space-between',
-          }}>
-          <Text style={{color: '#1F2128', fontSize: 20, fontWeight: '600'}}>
-            활동 지역
-          </Text>
-          <View
-            style={{
-              borderRadius: 4,
-              borderWidth: 1,
-              borderColor: '#E7E8EE',
-              height: 56,
-              flexDirection: 'row',
-              paddingHorizontal: 12,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{color: '#8A8D9E', fontSize: 16}}>
-              거주하는 동네를 선택해주세요
-            </Text>
-            <Icon name="magnify" size={24} color={Colors.grey600} />
-          </View>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-            height: 350,
-          }}>
-          <Text style={{color: '#1F2128', fontSize: 20, fontWeight: '600'}}>
-            나이
-          </Text>
-          <DropDownPicker
-            style={{
-              marginTop: 12,
-              borderColor: '#E7E8EE',
-              height: 56,
-              paddingHorizontal: 12,
-            }}
-            open={open}
-            value={value}
-            items={items}
-            placeholder="나이를 선택해주세요"
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            maxHeight={220} 
-            onChangeValue={onChange} 
-          />
-        </View>
-        <View style={{paddingHorizontal: 16, paddingBottom: 20}}>
-          <TouchableOpacity
-            style={{
-              borderRadius: 100,
-              width: '100%',
-              height: 44,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#F5935C',
-            }}
-            onPress={() =>
-              nameValue.length > 0 ? Alert.alert('완료') : Alert.alert('이름을 입력해주세요.')
-            }>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 18,
-                fontWeight: '600',
-                height: 24,
-              }}>
-              완료
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+        <ScrollView style={{paddingHorizontal: 16}}>
+          {list.map(key => (
+            <TouchableOpacity
+              style={{height: 40}}
+              onPress={() => Alert.alert(key)}
+              key={key}>
+              <Text
+                style={{
+                  marginLeft: 12,
+                  color: '#1F2128',
+                  fontSize: 18,
+                  fontWeight: '500',
+                }}>
+                {key}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 30,
+    borderWidth: 1,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnText: {
+    color: '#1F2128',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+});
